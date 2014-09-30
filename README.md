@@ -17,25 +17,24 @@ Package for generating server side XML sitemaps.
 	});
 
 ```
-- Sweet, now add an action method for the sitemap route. Create a collection of the data you want for the sitemap, and pass the collection to the SitemapCreator.createXMLSitemap( collection, rootUrl, mapMethodCallback ) method along with your rootUrl and a callback map method (which will iterate over all your passed collection items and return a new array of items).
+- Sweet, now add an action method for the sitemap route. Create a collection of the data you want for the sitemap, and pass the collection to the SitemapCreator.createXMLSitemap( collection, rootUrl, mapMethodCallback ) method along with your rootUrl. The collection you pass must only contain items which has the keys `loc` (required), `lastmod`, `priority` and `changefreq`. If the collection items contain more keys (or not the required `loc`) an error will be thrown.
+
 ```javascript
 
 	action: function () {
 			
 		// Let's get some stuff from MongoDB!
 		// (This can just be an array with whatever though.)
-    	// (And don't forget the .fetch() if you're using MongoDB!)
+		// (And don't forget the .fetch() if you're using MongoDB!)
 		var collectionOfPages = YourWebsitesPages.find(
 			{ status: "live" },
 			{ fields: { url: 1, updatedDate: 1, sitemapPrio: 1 } }
 			).fetch();
-      
-      	// Pass the collection aloing with a rootUrl string and a map method callback.
-      	// The xmlSitemap var will contain the XML for the sitemap!
-		var xmlSitemap = SitemapCreator.createXMLSitemap( collectionOfPages, 'http://www.your-root-url.com', function ( page ) {
-			// This callback will return the items for the actual XML creation.
-			// You'll have to provide a loc key/value, the rest of them are optional.
-			// You can NOT provide any other keys, only these four.
+
+		var collectionForXMLcreation = _( collectionOfPages ).map( function ( page ) {
+			// This map method will prepare a new array of items for the actual XML creation.
+			// You'll have to provide a "loc" value, the rest of the keys them are optional.
+			// You can NOT provide any other keys, only these four!
 			return {
 				loc: page.url,
 				lastmod: new Date( page.updatedDate ),
@@ -43,6 +42,10 @@ Package for generating server side XML sitemaps.
 				changefreq: 'monthly'
 			};
 		});
+      
+		// Pass the collection aloing with a rootUrl string and a map method callback.
+		// The xmlSitemap var will contain the XML for the sitemap!
+		var xmlSitemap = SitemapCreator.createXMLSitemap( collectionForXMLcreation, 'http://www.your-root-url.com' );
 		
 		// Write the response from the server!
 		this.response.writeHead(200, {'Content-Type': 'text/xml'});
@@ -56,8 +59,6 @@ Package for generating server side XML sitemaps.
 
 ## Stuff to think about
 
-- You have to proivde a loc key/value for every item from the callback method.
-- You must not pass any other keys than loc, lastmod, priority or changefreq. Doing so will throw an error.
 - The sitemap will be ordered by 1. priorty 2. lastmod.
 - Every item in the sitemap must have a unique loc value. Failing this will throw an error.
 

@@ -64,7 +64,7 @@ SitemapCreatorHandler = function () {
 	};
 
 	// Method for creating the sitemap XML
-	that.createXMLSitemap = function ( collection, rootUrl, mapMethod ) {
+	that.createXMLSitemap = function ( collection, rootUrl ) {
 
 		if (!collection)
 			throw new Error('You must provide a "collection"!');
@@ -78,24 +78,11 @@ SitemapCreatorHandler = function () {
 		if (typeof rootUrl !== 'string')
 			throw new Error('"rootUrl" is not a string, is: ' + typeof rootUrl );
 		
-		if (!mapMethod)
-			throw new Error('No "mapMethod" provided!');
-		
-		if (typeof mapMethod !== 'function')
-			throw new Error('"mapMethod" is not a function, is: ' + typeof mapMethod );
-
 		// Set the rootUrl for this whole object
 		that.rootUrl = rootUrl;
 
-		// Create the XML array using the passed collection and mapMethod
-		var xmlArray = _(collection).map( mapMethod );
-
-		// Make sure we have items in the array
-		if (xmlArray.length < 1)
-			throw new Error('Array produced by "mapMethod( "collection" )" is has no items, length is: ' + xmlArray.length );
-
 		// This test is not super clean, but it should work for now
-		var xmlKeys = _( xmlArray[0] ).keys();
+		var xmlKeys = _( collection[0] ).keys();
 
 		// Make sure all required keys are set
 		_.each(that.requiredSitemapKeys, function( requiredKey ){
@@ -110,7 +97,7 @@ SitemapCreatorHandler = function () {
 
 		var locArray = [];
 		// Make sure there are not 2 items with the same "loc" value
-		_.each(xmlArray, function(xmlItem) {
+		_.each(collection, function(xmlItem) {
 			if (locArray.indexOf(xmlItem.loc) > -1) {
 				console.log( xmlItem );
 				throw new Error('Duplicate <loc> for item above!');
@@ -119,7 +106,7 @@ SitemapCreatorHandler = function () {
 		});
 
 		// Sort the keys by 1. priority, 2. change date
-		xmlArray = _.chain(xmlArray)
+		collection = _.chain(collection)
 		.sortBy(function( xmlItem ){
 			if (xmlItem.lastmod)
 				return -xmlItem.lastmod;
@@ -133,7 +120,7 @@ SitemapCreatorHandler = function () {
 		.value();
 
 		// Iterate over all the key/values and return an array (which is then turned into a string by .join('\n') )
-		var innerXmlToReturn = _(xmlArray).map( function( xmlRowData ) {
+		var innerXmlToReturn = _(collection).map( function( xmlRowData ) {
 			return that.createXMLUrlRow( xmlRowData );
 		}).join('\n');
 
