@@ -58,6 +58,8 @@ Package for generating server side XML sitemaps.
 
 - You have to proivde a loc key/value for every item from the callback method.
 - You must not pass any other keys than loc, lastmod, priority or changefreq. Doing so will throw an error.
+- The sitemap will be ordered by 1. priorty 2. lastmod.
+- Every item in the sitemap must have a unique loc value. Failing this will throw an error.
 
 
 ## Bugs etc.
