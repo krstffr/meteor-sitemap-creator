@@ -6,7 +6,7 @@ Package for generating server side XML sitemaps.
 
 ## How to use (with iron:router)
 
-1. Define a sitemap route for iron:router.
+- Define a sitemap route for iron:router.
 ```javascript
 
 	// Sitemap route
@@ -17,7 +17,7 @@ Package for generating server side XML sitemaps.
 	});
 
 ```
-2. Sweet, now add an action method for the sitemap route. Create a collection of the data you want for the sitemap, and pass the collection to the SitemapCreator.createXMLSitemap( collection, rootUrl, mapMethodCallback ) method along with your rootUrl and a callback map method (which will iterate over all your passed collection items and return a new array of items).
+- Sweet, now add an action method for the sitemap route. Create a collection of the data you want for the sitemap, and pass the collection to the SitemapCreator.createXMLSitemap( collection, rootUrl, mapMethodCallback ) method along with your rootUrl and a callback map method (which will iterate over all your passed collection items and return a new array of items).
 ```javascript
 
 	action: function () {
@@ -51,7 +51,7 @@ Package for generating server side XML sitemaps.
 	}
 
 ```
-3. Now navigate to your site and go to /sitemap.xml (or whatever route you chose for your sitemap) and enjoy your sweet sweet sitemap.
+- Now navigate to your site and go to /sitemap.xml (or whatever route you chose for your sitemap) and enjoy your sweet sweet sitemap.
 
 
 ## Stuff to think about
