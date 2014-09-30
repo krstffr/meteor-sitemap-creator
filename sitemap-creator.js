@@ -108,6 +108,16 @@ SitemapCreatorHandler = function () {
 		if (forbiddenXmlKeys.length)
 			throw new Error('The array produced by "mapMethod( "collection" )" has forbidden keys: ' + forbiddenXmlKeys );
 
+		var locArray = [];
+		// Make sure there are not 2 items with the same "loc" value
+		_.each(xmlArray, function(xmlItem) {
+			if (locArray.indexOf(xmlItem.loc) > -1) {
+				console.log( xmlItem );
+				throw new Error('Duplicate <loc> for item above!');
+			}
+			locArray.push( xmlItem.loc );
+		});
+
 		// Sort the keys by 1. priority, 2. change date
 		xmlArray = _.chain(xmlArray)
 		.sortBy(function( xmlItem ){
