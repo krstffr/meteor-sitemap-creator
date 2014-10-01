@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Package for generating server side XML sitemaps.",
-  version: "0.0.3",
+  version: "0.0.4",
   git: "https://github.com/krstffr/meteor-sitemap-creator",
   name: "krstffr:sitemap-creator"
 });

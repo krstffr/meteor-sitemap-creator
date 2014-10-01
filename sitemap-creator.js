@@ -98,10 +98,8 @@ SitemapCreatorHandler = function () {
 		var locArray = [];
 		// Make sure there are not 2 items with the same "loc" value
 		_.each(collection, function(xmlItem) {
-			if (locArray.indexOf(xmlItem.loc) > -1) {
-				console.log( xmlItem );
-				throw new Error('Duplicate <loc> for item above!');
-			}
+			if (locArray.indexOf(xmlItem.loc) > -1)
+				console.log('Warning from sitemap-creator: duplicate <loc>: ', xmlItem.loc );
 			locArray.push( xmlItem.loc );
 		});
 
